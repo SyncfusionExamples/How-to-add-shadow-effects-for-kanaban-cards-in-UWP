@@ -1,0 +1,131 @@
+﻿<Page
+    x:Class="Kanban.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kanban"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+
+    xmlns:kanban="using:Syncfusion.UI.Xaml.Kanban"     >
+
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.DataContext>
+            <local:TaskDetails></local:TaskDetails>
+        </Grid.DataContext>
+        <Grid.Resources>
+            <kanban:ImageConverter x:Key="ImageConverter"/>
+            <kanban:DescriptionMinWidthConverter x:Key="DescriptionMinWidthConverter"/>
+            <DataTemplate x:Key="TagsTemplate">
+                <Border Background="#FFEDEDED" CornerRadius="2" >
+                    <TextBlock Text="{Binding}" HorizontalAlignment="Center"
+                       TextTrimming="CharacterEllipsis" Margin="10,1,10,1"
+                       FontSize="10" VerticalAlignment="Center"
+                       Foreground="#FF454545" />
+                </Border>
+            </DataTemplate>
+            <!--Default Card Template-->
+            <DataTemplate x:Key="DefaultKanbanCardTemplate">
+                <Grid Loaded="Grid_Loaded">
+                    <Canvas x:Name="Shadow"></Canvas>
+                    <Border BorderBrush="{Binding Tag.CardStyle.BorderBrush ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                BorderThickness="{Binding Tag.CardStyle.BorderThickness ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                CornerRadius="{Binding Tag.CardStyle.CornerRadius ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                MinHeight="100"
+                Background="{Binding Tag.CardStyle.Background ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                MaxHeight="300"
+                Height="Auto"
+                Margin="0,6,0,6"
+                >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" Grid.ColumnSpan="1" Margin="8,5,2,2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="4*"/>
+                                    <RowDefinition Height="3*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="KANBAN_Title" Grid.Row="0" 
+                               TextWrapping="NoWrap"
+                               Text="{Binding Title}" 
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="{Binding Tag.CardStyle.TitleHorizontalAlignment ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                               FontSize="{Binding Tag.CardStyle.TitleFontSize ,RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                               FontWeight="Bold" 
+                               Foreground="{Binding Tag.CardStyle.TitleColor ,RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+
+                                <TextBlock x:Name="KANBAN_Description" Grid.Row="1"
+                               MinWidth="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Converter={StaticResource DescriptionMinWidthConverter}}"
+                                      TextWrapping="Wrap" MaxHeight="50"
+                                      Text="{Binding Description}"
+                                      TextTrimming="CharacterEllipsis"
+                                      FontSize="{Binding Tag.CardStyle.FontSize ,RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                               Foreground="{Binding Tag.CardStyle.Foreground ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                      Height="Auto" 
+                                       />
+                                <ScrollViewer Grid.Row="2" Grid.ColumnSpan="1" VerticalAlignment="Bottom"
+                                  Margin="0,4,0,2"
+                                  Visibility="{Binding Tag.CardStyle.TagVisibility ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                                    <kanban:TagsStackPanel x:Name="KANBAN_TagsPanel" 
+                                          Orientation="Horizontal"
+                                          ContentTemplate="{StaticResource TagsTemplate}"
+                                          TagsCollection="{Binding Tags}"
+                                          DataContext="{Binding}" Height="Auto"  >
+
+                                    </kanban:TagsStackPanel>
+                                </ScrollViewer>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border BorderBrush="#FFE4E5E6" BorderThickness="1.5"
+                            Grid.Row="1" x:Name="KANBAN_ProfileIcon"
+                            CornerRadius="50"  
+                            Visibility="{Binding Tag.CardStyle.IconVisibility ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            Height="50" Width="50"
+                            HorizontalAlignment="Left" VerticalAlignment="Center" >
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource ImageConverter}}" Stretch="Fill" />
+                                    </Border.Background>
+                                </Border>
+
+                                <Border Grid.Row="2" BorderThickness="0" CornerRadius="0,0,6,0" Margin="0,0,-1,-1"
+                            Height="30" Width="30"
+                            Visibility="{Binding Tag.CardStyle.IndicatorVisibility ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                            HorizontalAlignment="Right">
+                                    <Border.Background>
+                                        <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
+                                            <GradientStop Color="Transparent" Offset="0.5" />
+                                            <GradientStop Color="{Binding Tag.IndicatorColor}" Offset="0.5" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+
+        <kanban:SfKanban x:Name="Kanban" CardTemplate="{StaticResource DefaultKanbanCardTemplate}"
+                         ItemsSource="{Binding Tasks}" CardTapped="Kanban_CardTapped" AutoGenerateColumns="True">
+
+        </kanban:SfKanban>
+    </Grid>
+</Page>
