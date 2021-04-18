@@ -154,7 +154,7 @@
       <Version>6.2.9</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfKanban.UWP">
-      <Version>18.2.0.48</Version>
+      <Version>*</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
